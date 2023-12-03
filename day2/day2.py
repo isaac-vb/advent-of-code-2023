@@ -1,14 +1,16 @@
 import re
 
-puzzle_input = open('day2input.txt', 'r').read().split('\n')
+with open('day2input.txt', 'r') as file:
+    puzzle_input = file.read().split('\n')
+
+NUM_OF_RED_CUBES = 12
+NUM_OF_GREEN_CUBES = 13
+NUM_OF_BLUE_CUBES = 14
 
 # Part 1
 
 
 def check_possible_game(line: str):
-    NUM_OF_RED_CUBES = 12
-    NUM_OF_GREEN_CUBES = 13
-    NUM_OF_BLUE_CUBES = 14
 
     line = line.split(':')
 

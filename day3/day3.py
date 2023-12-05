@@ -1,10 +1,7 @@
-
-
 with open('day3input.txt', 'r') as file:
     puzzle_input = file.read().split('\n')
 
-
-symbols = set("!#$%&()*+,-/:;<=>?@[\]^_{|}~")
+symbols = set(c for c in "".join(puzzle_input) if not c.isdigit() and c != ".")
 
 line_number = 1
 my_list = []
@@ -59,6 +56,7 @@ def check_diagonal_adjacency(digits_tuple, symbols_tuple):
         return 0
 
 
+# Part 1
 total = []
 for d in digits_list:
     for s in symbols_list:
@@ -69,4 +67,27 @@ for d in digits_list:
         elif check_vertical_adjacency(d, s) != 0:
             total.append(check_vertical_adjacency(d, s))
 
-print(sum(total))
+print(f"Part 1 Answer: {sum(total)}")
+
+
+# Part 2
+
+asterix_list = [s for s in my_list if s[0] == "*"]
+
+list_of_gears = []
+
+for a in asterix_list:
+    adjacency_list = []
+    for d in digits_list:
+        if check_diagonal_adjacency(d, a) != 0:
+            adjacency_list.append(int(d[0]))
+        elif check_horizontal_adjacency(d, a) != 0:
+            adjacency_list.append(int(d[0]))
+        elif check_vertical_adjacency(d, a) != 0:
+            adjacency_list.append(int(d[0]))
+
+    if len(adjacency_list) == 2:
+        list_of_gears.append(adjacency_list)
+
+gear_ratio_sum = sum([x[0] * x[1] for x in list_of_gears])
+print(f"Part 2 Answer: {gear_ratio_sum}")

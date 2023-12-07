@@ -1,14 +1,7 @@
-
-
 import re
-
-input = "Card 14: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"
-input = "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1"
 
 with open('day4input.txt', 'r') as file:
     puzzle_input = file.read().split('\n')
-
-input = puzzle_input
 
 
 def get_info_from_card(card):

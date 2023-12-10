@@ -18,11 +18,17 @@ CARD_TYPES = ["A", "K", "Q", "J", "T",
 CARD_TYPES.reverse()
 
 
-def calculate_hand_type(hand: str):
+def calculate_hand_type(hand: str, part: int):
+    """Calculates the hand type of a given hand, also based on the part of the question"""
     card_counts = dict(sorted(dict(Counter(hand)).items(),
                        key=lambda x: x[1], reverse=True))
 
-    # print(card_counts)
+    if part == 2:
+        if "J" in card_counts:
+            if len(card_counts) == 1:
+                return 7
+            else:
+                card_counts = joker_sorting(card_counts)
 
     # Five of a kind
     if len(card_counts) == 1:
@@ -54,18 +60,33 @@ def calculate_hand_type(hand: str):
 
 
 def sort_by_score(item):
+    """Sorts the hands by their score followed by the individual card ranks"""
     hand_score = item['hand_score']
     card_values = [CARD_TYPES.index(card) for card in item['hand']]
 
     return (hand_score, *card_values)
 
 
-for c in camel_cards_game:
-    c['hand_score'] = calculate_hand_type(c.get('hand'))
+def joker_sorting(card_counts: dict):
+    """Converts the joker cards in a hand accordingly"""
+    joker_card_count = card_counts.get("J")
+    del card_counts["J"]
 
+    max_occurences = {card: count for card, count in card_counts.items(
+    ) if count >= max(card_counts.values())}
+
+    most_common_card = list(max_occurences.keys())[0]
+
+    card_counts[most_common_card] += joker_card_count
+
+    return card_counts
+
+
+# Part 1
+for c in camel_cards_game:
+    c['hand_score'] = calculate_hand_type(c.get('hand'), part=1)
 
 camel_cards_game = sorted(camel_cards_game, key=sort_by_score)
-
 
 total_winnings = 0
 for rank, c in enumerate(camel_cards_game):
@@ -73,3 +94,22 @@ for rank, c in enumerate(camel_cards_game):
     total_winnings += c.get('bid') * c.get('rank')
 
 print(f"Part 1 Answer: {total_winnings}")
+
+# Part 2
+
+# Adjust the card type rankings (for the joker card)
+CARD_TYPES = ["A", "K", "Q", "T",
+              "9", "8", "7", "6", "5", "4", "3", "2", "J"]
+CARD_TYPES.reverse()
+
+for c in camel_cards_game:
+    c['hand_score'] = calculate_hand_type(c.get('hand'), part=2)
+
+camel_cards_game = sorted(camel_cards_game, key=sort_by_score)
+
+total_winnings = 0
+for rank, c in enumerate(camel_cards_game):
+    c['rank'] = rank+1
+    total_winnings += c.get('bid') * c.get('rank')
+
+print(f"Part 2 Answer: {total_winnings}")
